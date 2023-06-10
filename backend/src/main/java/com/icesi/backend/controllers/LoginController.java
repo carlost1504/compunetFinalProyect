@@ -34,12 +34,8 @@ public class LoginController implements LoginAPI {
         if (phoneNumberValidator.isValid(s, null))
             return loginService.loginByPhoneNumber(loginDTO);
 
-<<<<<<< HEAD
         throw new RuntimeException(BackendApplicationErrors.CODE_U_02.getMessage());
-=======
 
-        throw new EShopException(HttpStatus.BAD_REQUEST, new EShopError(BackendApplicationErrors.CODE_L_01, BackendApplicationErrors.CODE_L_01.getMessage()));
->>>>>>> 345fa8d82298842e4d915bf1cf5a4c4e1aa28344
     }
 
 }
