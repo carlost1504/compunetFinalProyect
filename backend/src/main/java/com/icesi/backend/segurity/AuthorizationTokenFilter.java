@@ -15,11 +15,13 @@ import io.jsonwebtoken.MalformedJwtException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -28,10 +30,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+
+import org.springframework.security.core.Authentication;
 
 @Component
 @AllArgsConstructor
@@ -41,7 +42,7 @@ import java.util.UUID;
  * Este filtro se ejecuta una vez por cada solicitud entrante y se encarga de verificar
  * la presencia y validez de un token de autorización en la solicitud.
  */
-public class AuthorizationTokenFilter extends OncePerRequestFilter {
+public class AuthorizationTokenFilter extends OncePerRequestFilter implements Authentication {
 
     // Constantes para los encabezados y prefijos del token de autorización
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -84,17 +85,11 @@ public class AuthorizationTokenFilter extends OncePerRequestFilter {
                 roleFilter(context, request, response);
                 filterChain.doFilter(request, response);
             } else {
-                createUnauthorizedFilter(
-                        new EShopException(HttpStatus.UNAUTHORIZED,
-                                new EShopError(BackendApplicationErrors.CODE_L_03, BackendApplicationErrors.CODE_L_03.getMessage())),
-                        response);
+                createUnauthorizedFilter((new RuntimeException(BackendApplicationErrors.CODE_L_03.getMessage())), response);
             }
         } catch (JwtException e) {
             System.out.println("Error verifying JWT token: " + e.getMessage());
-            createUnauthorizedFilter(
-                    new EShopException(HttpStatus.UNAUTHORIZED,
-                            new EShopError(BackendApplicationErrors.CODE_L_03, BackendApplicationErrors.CODE_L_03.getMessage())),
-                    response);
+            createUnauthorizedFilter((new RuntimeException(BackendApplicationErrors.CODE_L_03.getMessage())), response);
         } finally {
             SecurityContextHolder.clearContext();
         }
@@ -137,11 +132,9 @@ public class AuthorizationTokenFilter extends OncePerRequestFilter {
      * @return Una instancia de E_SHOP_Exception con el código de error y mensaje correspondientes.
      */
     private EShopException createUnauthorizedException() {
-        EShopError error = new EShopError(BackendApplicationErrors.CODE_L_03, BackendApplicationErrors.CODE_L_03.getMessage());
-        return new EShopException(HttpStatus.UNAUTHORIZED, error);
+
+        return (EShopException) new RuntimeException(BackendApplicationErrors.CODE_L_03.getMessage());
     }
-
-
 
 
 
@@ -215,14 +208,49 @@ public class AuthorizationTokenFilter extends OncePerRequestFilter {
      * @throws IOException si ocurre un error al escribir la respuesta
      */
     @SneakyThrows
-    private void createUnauthorizedFilter(EShopException ESHOP_Exception, HttpServletResponse response) {
+    private void createUnauthorizedFilter(RuntimeException ESHOP_Exception, HttpServletResponse response) {
         ObjectMapper objectMapper = new ObjectMapper();
-        EShopError ESHOP_Error = ESHOP_Exception.getError();
+        RuntimeException ESHOP_Error = ESHOP_Exception;
         String message = objectMapper.writeValueAsString(ESHOP_Error);
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(message);
         response.getWriter().flush();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public Object getCredentials() {
+        return null;
+    }
+
+    @Override
+    public Object getDetails() {
+        return null;
+    }
+
+    @Override
+    public Object getPrincipal() {
+        return null;
+    }
+
+    @Override
+    public boolean isAuthenticated() {
+        return false;
+    }
+
+    @Override
+    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }

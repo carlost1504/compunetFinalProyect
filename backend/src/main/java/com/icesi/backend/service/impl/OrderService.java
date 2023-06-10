@@ -41,7 +41,7 @@ public class OrderService implements OrderServiceInterface {
 
     @Override
     public Order getOrder(UUID orderId) {
-        return orderRepository.findById(orderId).orElseThrow(()-> new EShopException(HttpStatus.NOT_FOUND, new EShopError(BackendApplicationErrors.CODE_O_01, BackendApplicationErrors.CODE_O_01.getMessage())));
+        return orderRepository.findById(orderId).orElseThrow(()-> new RuntimeException(BackendApplicationErrors.CODE_O_01.getMessage()));
     }
 
 
@@ -50,9 +50,7 @@ public class OrderService implements OrderServiceInterface {
     @Transactional
     public Order createOrder(Order order, UUID userId, List<OrderItemDTO> items) {
         ShopUser user = userRepository.findById(userId).orElseThrow(()->
-                new EShopException(HttpStatus.NOT_FOUND,
-                        new EShopError(BackendApplicationErrors.CODE_O_01,
-                                BackendApplicationErrors.CODE_O_01.getMessage())));
+                new RuntimeException(BackendApplicationErrors.CODE_U_01.getMessage()));
 
         List<OrderItem> orderItems = new ArrayList<>();
 
@@ -60,9 +58,7 @@ public class OrderService implements OrderServiceInterface {
             List<Item> list = itemRepository.findByAvailableAndItemId(true, item.getItemId());
 
             if(list.size() < item.getQuantity()){
-                throw new EShopException(HttpStatus.NOT_FOUND,
-                        new EShopError(BackendApplicationErrors.CODE_I_02,
-                                BackendApplicationErrors.CODE_I_02.getMessage()));
+                throw new RuntimeException(BackendApplicationErrors.CODE_O_01.getMessage());
             }
 
             list = list.stream().limit(item.getQuantity()).collect(Collectors.toList());
@@ -100,7 +96,7 @@ public class OrderService implements OrderServiceInterface {
         int res = orderRepository.updateStatusByOrderId(status,orderId);
 
         if(res == 0){
-            throw new EShopException(HttpStatus.NOT_FOUND, new EShopError(BackendApplicationErrors.CODE_O_01, BackendApplicationErrors.CODE_O_01.getMessage()));
+            throw new RuntimeException(BackendApplicationErrors.CODE_O_01.getMessage());
         }
     }
 

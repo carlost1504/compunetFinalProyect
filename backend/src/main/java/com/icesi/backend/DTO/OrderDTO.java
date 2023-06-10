@@ -2,9 +2,7 @@ package com.icesi.backend.DTO;
 
 
 import com.icesi.backend.errorConstants.OrderStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -13,6 +11,8 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class OrderDTO {
 
     private UUID orderId;

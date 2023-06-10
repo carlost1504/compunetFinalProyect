@@ -1,8 +1,10 @@
 package com.icesi.backend.service.impl;
 
 import com.icesi.backend.DTO.ItemCreateDTO;
+import com.icesi.backend.error.EshopErrorCode;
 import com.icesi.backend.error.exception.EShopError;
 import com.icesi.backend.error.exception.EShopException;
+import com.icesi.backend.error.exception.ErrorDetail;
 import com.icesi.backend.errorConstants.BackendApplicationErrors;
 import com.icesi.backend.models.Item;
 import com.icesi.backend.models.ItemType;
@@ -27,7 +29,7 @@ public class ItemService implements ItemServiceInterface {
 
     @Override
     public ItemType getItem(UUID id) {
-        return itemTypeRepository.findById(id).orElseThrow(()-> new EShopException(HttpStatus.NOT_FOUND, new EShopError(BackendApplicationErrors.CODE_I_01, BackendApplicationErrors.CODE_I_01.getMessage())));
+        return itemTypeRepository.findById(id).orElseThrow(()-> new RuntimeException(""));
     }
 
     @Override
@@ -39,7 +41,7 @@ public class ItemService implements ItemServiceInterface {
     public boolean updateItem(ItemType itemType, UUID id) {
         int result = itemTypeRepository.updateNameAndDescriptionAndPriceAndImageByItemTypeId(itemType.getName(), itemType.getDescription(), itemType.getPrice(), itemType.getImage(), id);
         if (result == 0) {
-            throw new EShopException(HttpStatus.NOT_FOUND, new EShopError(BackendApplicationErrors.CODE_I_01, BackendApplicationErrors.CODE_I_01.getMessage()));
+            throw new RuntimeException("Item type not found");
         }
         return true;
     }
@@ -52,7 +54,7 @@ public class ItemService implements ItemServiceInterface {
     @Override
     public List<Item> addItemToStock(UUID itemTypeId, int quantity) {
 
-        ItemType itemType = itemTypeRepository.findById(itemTypeId).orElseThrow(() -> new EShopException(HttpStatus.NOT_FOUND, new EShopError(BackendApplicationErrors.CODE_I_01, BackendApplicationErrors.CODE_I_01.getMessage())));
+        ItemType itemType = itemTypeRepository.findById(itemTypeId).orElseThrow(() -> new RuntimeException("Item type not found"));
 
         for (int i = 0; i < quantity; i++) {
             Item item = Item.builder().itemId(UUID.randomUUID()).available(true).itemType(itemType).build();
