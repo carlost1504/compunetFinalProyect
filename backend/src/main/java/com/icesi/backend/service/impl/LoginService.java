@@ -53,7 +53,7 @@ public class LoginService implements LoginServiceInterface {
     private TokenDTO createTokenDTO(ShopUser user) {
         Map<String, String> claims = new HashMap<>();
         claims.put("userId", user.getUserId().toString());
-        claims.put("roleId", "149b86c3-d393-411a-b9e7-51a4bee9d024");
+        claims.put("roleId", user.getRole().getRoleId().toString());
         return new TokenDTO(Token_Parser.createJWT(user.getUserId().toString(), user.getEmail(), user.getEmail(), claims, 1000L*60*20), "shopUser", user.getUserId().toString());
     }
 

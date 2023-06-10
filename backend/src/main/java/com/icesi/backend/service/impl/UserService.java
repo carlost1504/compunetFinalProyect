@@ -5,6 +5,7 @@ import com.icesi.backend.DTO.UserUpdateDTO;
 import com.icesi.backend.mappers.UserMapper;
 import com.icesi.backend.models.ShopUser;
 import com.icesi.backend.respositories.UserRepository;
+import com.icesi.backend.service.RoleServiceInterface;
 import com.icesi.backend.service.UserServiceInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class UserService implements UserServiceInterface {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private RoleServiceInterface roleService;
+
     public ShopUser getUser(){
         return (ShopUser) userRepository.findAll();
     }
@@ -33,6 +37,11 @@ public class UserService implements UserServiceInterface {
             Optional<ShopUser> existingUserByPhone = userRepository.findByPhoneNumber(user.getPhoneNumber());
             if(existingUserByPhone.isPresent() || existingUserByEmail.isPresent()){
                 throw new DuplicateKeyException("Email or Number Phone already exist");
+            }else{
+                ShopUser newShopUser = userMapper.fromUserCreateDTO(user);
+                newShopUser.setRole(roleService.getRoleByName("Shop"));
+                System.out.println(newShopUser.toString());
+                return Optional.of(userRepository.save(newShopUser));
             }
         }
         if(email.isPresent()){
@@ -51,7 +60,8 @@ public class UserService implements UserServiceInterface {
                 throw new DuplicateKeyException("Number phone already exists");
             }
             ShopUser newShopUser = userMapper.fromUserCreateDTO(user);
-
+            newShopUser.setRole(roleService.getRoleByName("Shop"));
+            System.out.println(newShopUser.toString());
             return Optional.of(userRepository.save(newShopUser));
         }
         return Optional.empty();
