@@ -51,6 +51,7 @@ public class UserService implements UserServiceInterface {
                 throw new DuplicateKeyException("Number phone already exists");
             }
             ShopUser newShopUser = userMapper.fromUserCreateDTO(user);
+
             return Optional.of(userRepository.save(newShopUser));
         }
         return Optional.empty();

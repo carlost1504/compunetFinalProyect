@@ -18,6 +18,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("update Order o set o.status = ?1 where o.orderId = ?2")
     int updateStatusByOrderId(String status, UUID orderId);
 
-    List<Order> findByUser_UserId(UUID userId);
+    List<Order> findByUserId(UUID userId);
 
 }

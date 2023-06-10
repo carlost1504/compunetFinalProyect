@@ -15,7 +15,7 @@ import java.util.UUID;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, UUID> {
 
-    List<Item> findByAvailableAndItem(boolean available, UUID itemId);
+    List<Item> findByAvailableAndItemId(boolean available, UUID itemId);
 
     @Transactional
     @Modifying

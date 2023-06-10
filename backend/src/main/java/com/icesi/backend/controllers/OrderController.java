@@ -5,7 +5,7 @@ import com.icesi.backend.DTO.OrderUpdateDTO;
 import com.icesi.backend.api.OrderAPI;
 import com.icesi.backend.mappers.OrderMapper;
 import com.icesi.backend.service.impl.OrderService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class OrderController implements OrderAPI {
 
-    public final OrderService orderService;
+    public  OrderService orderService;
 
-    public  final OrderMapper orderMapper;
+    public   OrderMapper orderMapper;
 
     @Override
     public OrderDTO getOrder(@NotNull UUID orderId) {

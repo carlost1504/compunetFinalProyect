@@ -15,6 +15,7 @@ import static com.icesi.backend.error.ErrorDetailsManager.*;
 
 @ControllerAdvice
 public class GlobalExceptions {
+
     @ExceptionHandler(EShopException.class)
     public ResponseEntity<EShopError> handleApplicationException(EShopException exception){
         return ResponseEntity.status(exception.getEShopError().getStatus()).body(exception.getEShopError());
