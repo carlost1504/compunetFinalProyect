@@ -32,7 +32,7 @@ public class LoginController implements LoginAPI {
         if (phoneNumberValidator.isValid(s, null))
             return loginService.loginByPhoneNumber(loginDTO);
 
-        throw new EShopException(HttpStatus.BAD_REQUEST, new EShopError(BackendApplicationErrors.CODE_L_01, BackendApplicationErrors.CODE_L_01.getMessage()));
+        throw new RuntimeException(BackendApplicationErrors.CODE_U_02.getMessage());
     }
 
 }

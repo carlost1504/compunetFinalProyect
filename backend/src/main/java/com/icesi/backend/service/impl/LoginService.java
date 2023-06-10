@@ -32,21 +32,21 @@ public class LoginService implements LoginServiceInterface {
 
     @Override
     public TokenDTO loginByEmail(LoginDTO loginDTO) {
-        ShopUser user = userRepository.findByEmail(loginDTO.getUsername()).orElseThrow(()->new EShopException(HttpStatus.NOT_FOUND, new EShopError(BackendApplicationErrors.CODE_U_01, BackendApplicationErrors.CODE_U_01.getMessage())));
+        ShopUser user = userRepository.findByEmail(loginDTO.getUsername()).orElseThrow(()->new RuntimeException(BackendApplicationErrors.CODE_U_01.getMessage()));
         validatePassword(user.getPassword(), loginDTO.getPassword());
         return createTokenDTO(user);
     }
 
     @Override
     public TokenDTO loginByPhoneNumber(LoginDTO loginDTO) {
-        ShopUser user = userRepository.findByPhoneNumber(loginDTO.getUsername()).orElseThrow(()->new EShopException(HttpStatus.NOT_FOUND, new EShopError(BackendApplicationErrors.CODE_U_01, BackendApplicationErrors.CODE_U_01.getMessage())));
+        ShopUser user = userRepository.findByPhoneNumber(loginDTO.getUsername()).orElseThrow(()->new RuntimeException(BackendApplicationErrors.CODE_I_01.getMessage()));
         validatePassword(user.getPassword(), loginDTO.getPassword());
         return createTokenDTO(user);
     }
 
     @Override
     public List<PermissionUser> getPermissionsByRoleId(UUID roleId) {
-        Role role = roleRepository.findById(roleId).orElseThrow(()->new EShopException(HttpStatus.NOT_FOUND, new EShopError(BackendApplicationErrors.CODE_L_04, BackendApplicationErrors.CODE_L_04.getMessage())));
+        Role role = roleRepository.findById(roleId).orElseThrow(()->new RuntimeException(BackendApplicationErrors.CODE_L_02.getMessage()));
         return role.getRolePermissions();
     }
 
@@ -59,7 +59,7 @@ public class LoginService implements LoginServiceInterface {
 
     private void validatePassword(String userPassword, String loginDTOPassword) {
         if (!userPassword.equals(loginDTOPassword))
-            throw new EShopException(HttpStatus.BAD_REQUEST, new EShopError(BackendApplicationErrors.CODE_L_02, BackendApplicationErrors.CODE_L_02.getMessage()));
+            throw new RuntimeException(BackendApplicationErrors.CODE_U_01.getMessage());
     }
 
 }
