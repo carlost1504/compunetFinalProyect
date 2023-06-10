@@ -4,21 +4,19 @@ import com.icesi.backend.DTO.UserCreateDTO;
 import com.icesi.backend.DTO.UserUpdateDTO;
 import com.icesi.backend.models.ShopUser;
 import com.icesi.backend.service.impl.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
+
 public class UserController {
 
-    @Autowired
-    private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     @GetMapping()
     public List<ShopUser> getUser(){

@@ -59,6 +59,7 @@ public class ItemService implements ItemServiceInterface {
             itemRepository.save(item);
         }
 
+
         return StreamSupport.stream(itemRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
 }

@@ -57,7 +57,7 @@ public class OrderService implements OrderServiceInterface {
         List<OrderItem> orderItems = new ArrayList<>();
 
         for(OrderItemDTO item : items){
-            List<Item> list = itemRepository.findByAvailableAndItem(true, item.getItemId());
+            List<Item> list = itemRepository.findByAvailableAndItemId(true, item.getItemId());
 
             if(list.size() < item.getQuantity()){
                 throw new EShopException(HttpStatus.NOT_FOUND,
@@ -116,7 +116,7 @@ public class OrderService implements OrderServiceInterface {
 
     @Override
     public List<Order> getUserOrders(UUID userId) {
-        return orderRepository.findByUser_UserId(userId);
+        return orderRepository.findByUserId(userId);
     }
 
 

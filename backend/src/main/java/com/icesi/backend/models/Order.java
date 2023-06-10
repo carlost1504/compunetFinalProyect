@@ -25,6 +25,7 @@ public class Order {
     private ShopUser shopUser;
     private String status;
     private Long total;
+    private UUID userId;
     @OneToMany()
     private List<OrderItem> itemList;
 
