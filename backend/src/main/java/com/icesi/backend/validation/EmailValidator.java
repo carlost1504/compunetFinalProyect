@@ -1,8 +1,11 @@
 package com.icesi.backend.validation;
 
+import lombok.RequiredArgsConstructor;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+@RequiredArgsConstructor
 public class EmailValidator implements ConstraintValidator<CustomAnnotations.ValidEmail, String> {
 
     @Override

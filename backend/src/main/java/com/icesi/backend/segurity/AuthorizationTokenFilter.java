@@ -53,7 +53,7 @@ public class AuthorizationTokenFilter extends OncePerRequestFilter {
 
     // Rutas excluidas de la autorización
     private static final String[] excludedPaths = {
-            "POST /users",
+            "POST /users/create",
             "POST /login",
             "OPTIONS /users",
             "OPTIONS /login",

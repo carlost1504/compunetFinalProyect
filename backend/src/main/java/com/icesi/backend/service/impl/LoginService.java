@@ -26,9 +26,9 @@ import java.util.UUID;
 @Service
 public class LoginService implements LoginServiceInterface {
 
-    public final UserRepository userRepository;
+    private UserRepository userRepository;
 
-    public final RoleRepository roleRepository;
+    private  RoleRepository roleRepository;
 
     @Override
     public TokenDTO loginByEmail(LoginDTO loginDTO) {
@@ -39,7 +39,7 @@ public class LoginService implements LoginServiceInterface {
 
     @Override
     public TokenDTO loginByPhoneNumber(LoginDTO loginDTO) {
-        ShopUser user = userRepository.findByPhoneNumber(loginDTO.getUsername()).orElseThrow(()->new EShopException(HttpStatus.NOT_FOUND, new EShopError(BackendApplicationErrors.CODE_U_01, BackendApplicationErrors.CODE_U_01.getMessage())));
+        ShopUser user = userRepository.findByPhoneNumber(loginDTO.getUsername()).orElseThrow(()->new EShopException(HttpStatus.UNAUTHORIZED, new EShopError(BackendApplicationErrors.CODE_U_01, BackendApplicationErrors.CODE_U_01.getMessage())));
         validatePassword(user.getPassword(), loginDTO.getPassword());
         return createTokenDTO(user);
     }
@@ -53,8 +53,8 @@ public class LoginService implements LoginServiceInterface {
     private TokenDTO createTokenDTO(ShopUser user) {
         Map<String, String> claims = new HashMap<>();
         claims.put("userId", user.getUserId().toString());
-        claims.put("roleId", user.getRole().getRoleId().toString());
-        return new TokenDTO(Token_Parser.createJWT(user.getUserId().toString(), user.getEmail(), user.getEmail(), claims, 1000L*60*20), user.getRole().getRoleName(), user.getUserId().toString());
+        claims.put("roleId", "149b86c3-d393-411a-b9e7-51a4bee9d024");
+        return new TokenDTO(Token_Parser.createJWT(user.getUserId().toString(), user.getEmail(), user.getEmail(), claims, 1000L*60*20), "shopUser", user.getUserId().toString());
     }
 
     private void validatePassword(String userPassword, String loginDTOPassword) {

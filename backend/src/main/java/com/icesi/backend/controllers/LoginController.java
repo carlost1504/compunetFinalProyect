@@ -9,12 +9,13 @@ import com.icesi.backend.error.exception.EShopError;
 import com.icesi.backend.error.exception.EShopException;
 import com.icesi.backend.errorConstants.BackendApplicationErrors;
 import com.icesi.backend.service.LoginServiceInterface;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RestController
 public class LoginController implements LoginAPI {
 
@@ -24,6 +25,7 @@ public class LoginController implements LoginAPI {
     @CrossOrigin(origins = "*")
     @Override
     public TokenDTO login(LoginDTO loginDTO) {
+
         String s = loginDTO.getUsername();
         EmailValidator emailValidator = new EmailValidator();
         PhoneNumberValidator phoneNumberValidator = new PhoneNumberValidator();
@@ -31,6 +33,7 @@ public class LoginController implements LoginAPI {
             return loginService.loginByEmail(loginDTO);
         if (phoneNumberValidator.isValid(s, null))
             return loginService.loginByPhoneNumber(loginDTO);
+
 
         throw new EShopException(HttpStatus.BAD_REQUEST, new EShopError(BackendApplicationErrors.CODE_L_01, BackendApplicationErrors.CODE_L_01.getMessage()));
     }
